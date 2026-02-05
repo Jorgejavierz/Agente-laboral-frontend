@@ -25,10 +25,10 @@ const Historial: React.FC = () => {
         const res = await fetch(`${API_BASE}/memoria?limit=3`);
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const data = await res.json();
-        if (data.memoria && data.memoria.length > 0) {
+        if (data.memoria && Array.isArray(data.memoria)) {
           setMemoria(data.memoria);
         }
-      } catch (error) {
+      } catch (e) {
         setError("Error cargando historial.");
       } finally {
         setCargando(false);
@@ -61,7 +61,11 @@ const Historial: React.FC = () => {
   }
 
   if (memoria.length === 0) {
-    return <p>No hay análisis guardados todavía.</p>;
+    return (
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: 24 }}>
+        <p>No hay análisis guardados todavía.</p>
+      </div>
+    );
   }
 
   return (

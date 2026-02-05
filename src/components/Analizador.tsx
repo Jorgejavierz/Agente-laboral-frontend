@@ -1,30 +1,32 @@
 import { useState } from "react";
 import jsPDF from "jspdf";
 
-// 🔗 Ahora apunta al backend en Render
-const API_BASE = "https://agente-abogado.onrender.com"; 
+// 🔗 Apunta al backend en Render
+const API_BASE = "https://agente-abogado.onrender.com";
 
 export default function Analizador() {
   const [texto, setTexto] = useState("");
-  const [resultado, setResultado] = useState<any>(null);
+  const [resultado, setResultado] = useState<{ texto_formateado?: string } | null>(null);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [feedbackEnviado, setFeedbackEnviado] = useState<boolean>(false);
+  const [feedbackEnviado, setFeedbackEnviado] = useState(false);
 
   const analizar = async () => {
     setCargando(true);
     setError(null);
     setResultado(null);
     setFeedbackEnviado(false);
+
     try {
       const res = await fetch(`${API_BASE}/analizar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ texto }),
       });
-      if (!res.ok) throw new Error(`Error ${res.status}`);
-      const data = await res.json();
 
+      if (!res.ok) throw new Error(`Error ${res.status}`);
+
+      const data = await res.json();
       if (data.error) {
         setError(data.error);
       } else {
@@ -92,7 +94,7 @@ export default function Analizador() {
 
       {error && <p style={{ marginTop: 12, color: "crimson" }}>{error}</p>}
 
-      {resultado && resultado.texto_formateado && (
+      {resultado?.texto_formateado && (
         <div
           style={{
             marginTop: 16,
