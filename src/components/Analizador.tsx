@@ -2,6 +2,7 @@ import { useState } from "react";
 import jsPDF from "jspdf";
 
 const API_BASE = "https://agente-abogado.onrender.com";
+const MAX_FILE_SIZE_MB = 10;
 
 export default function Analizador() {
   const [texto, setTexto] = useState("");
@@ -10,11 +11,16 @@ export default function Analizador() {
   const [error, setError] = useState<string | null>(null);
   const [feedbackEnviado, setFeedbackEnviado] = useState(false);
 
-  // Leer archivo
+  // Leer archivo con validación de tamaño
   const leerArchivo = async (file: File) => {
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      setError(`El archivo supera el límite de ${MAX_FILE_SIZE_MB} MB.`);
+      return;
+    }
     try {
       const text = await file.text();
       setTexto(text);
+      setError(null); // limpiar error si el archivo es válido
     } catch {
       setError("No se pudo leer el archivo.");
     }
@@ -129,7 +135,7 @@ export default function Analizador() {
           marginBottom: 12,
         }}
       >
-        Arrastrá tu archivo aquí
+        Arrastrá tu archivo aquí (máx. {MAX_FILE_SIZE_MB} MB)
       </div>
 
       <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
