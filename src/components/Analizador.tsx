@@ -1,15 +1,35 @@
 import { useState } from "react";
 import jsPDF from "jspdf";
 
-// 🔗 Apunta al backend en Render
 const API_BASE = "https://agente-abogado.onrender.com";
 
 export default function Analizador() {
   const [texto, setTexto] = useState("");
-  const [resultado, setResultado] = useState<{ texto_formateado?: string } | null>(null);
+  const [resultado, setResultado] = useState<any>(null);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [feedbackEnviado, setFeedbackEnviado] = useState(false);
+
+  // Leer archivo
+  const leerArchivo = async (file: File) => {
+    try {
+      const text = await file.text();
+      setTexto(text);
+    } catch {
+      setError("No se pudo leer el archivo.");
+    }
+  };
+
+  const manejarArchivo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) leerArchivo(file);
+  };
+
+  const manejarDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) leerArchivo(file);
+  };
 
   const analizar = async () => {
     setCargando(true);
@@ -32,7 +52,7 @@ export default function Analizador() {
       } else {
         setResultado(data);
       }
-    } catch (e) {
+    } catch {
       setError("No se pudo analizar. Revisá el texto o intentá más tarde.");
     } finally {
       setCargando(false);
@@ -69,10 +89,11 @@ export default function Analizador() {
     <div style={{ maxWidth: 800, margin: "0 auto", padding: 24 }}>
       <h1 style={{ fontWeight: 700, fontSize: 24 }}>Agente Abogado Laboral</h1>
       <p style={{ color: "#555" }}>
-        Pegá el contrato o describí el conflicto. Recibirás normativa,
-        jurisprudencia y una conclusión en formato narrativo.
+        Pegá el contrato, subí un archivo o arrastralo aquí. Recibirás normativa,
+        jurisprudencia, OCT y una conclusión en formato narrativo.
       </p>
 
+      {/* Textarea */}
       <textarea
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
@@ -83,11 +104,36 @@ export default function Analizador() {
           padding: 12,
           border: "1px solid #ddd",
           borderRadius: 8,
+          marginBottom: 12,
         }}
       />
 
+      {/* Input de archivo */}
+      <input
+        type="file"
+        accept=".txt,.pdf,.docx"
+        onChange={manejarArchivo}
+        style={{ marginBottom: 12 }}
+      />
+
+      {/* Área drag & drop */}
+      <div
+        onDrop={manejarDrop}
+        onDragOver={(e) => e.preventDefault()}
+        style={{
+          border: "2px dashed #aaa",
+          borderRadius: 8,
+          padding: 24,
+          textAlign: "center",
+          color: "#555",
+          marginBottom: 12,
+        }}
+      >
+        Arrastrá tu archivo aquí
+      </div>
+
       <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
-        <button onClick={analizar} disabled={cargando}>
+        <button onClick={analizar} disabled={cargando || !texto}>
           {cargando ? "Analizando…" : "Analizar"}
         </button>
       </div>
@@ -110,6 +156,16 @@ export default function Analizador() {
           <h2 style={{ fontWeight: 700, fontSize: 18 }}>Informe narrativo</h2>
           {resultado.texto_formateado}
 
+          {/* Bloque OCT explícito */}
+          {resultado.json?.oct && (
+            <div style={{ marginTop: 16 }}>
+              <h3 style={{ fontWeight: 700, fontSize: 16 }}>🔎 Resultados OCT</h3>
+              <p><strong>Clasificación OCT:</strong> {resultado.json.oct.clasificacion_oct}</p>
+              <p><strong>Riesgos OCT:</strong> {resultado.json.oct.riesgos_oct}</p>
+              <p><strong>Recomendaciones OCT:</strong> {resultado.json.oct.recomendaciones_oct}</p>
+            </div>
+          )}
+
           <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
             <button onClick={descargarPDF}>📄 Descargar PDF</button>
           </div>
@@ -120,9 +176,7 @@ export default function Analizador() {
               <button onClick={() => enviarFeedback(false)}>👎 No útil</button>
             </div>
           ) : (
-            <p style={{ marginTop: 12, color: "green" }}>
-              ¡Gracias por tu feedback!
-            </p>
+            <p style={{ marginTop: 12, color: "green" }}>¡Gracias por tu feedback!</p>
           )}
         </div>
       )}
