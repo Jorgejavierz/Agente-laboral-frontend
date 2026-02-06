@@ -11,33 +11,64 @@ export default function Analizador() {
   const [error, setError] = useState<string | null>(null);
   const [feedbackEnviado, setFeedbackEnviado] = useState(false);
 
-  // Leer archivo con validación de tamaño
-  const leerArchivo = async (file: File) => {
-    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      setError(`El archivo supera el límite de ${MAX_FILE_SIZE_MB} MB.`);
-      return;
-    }
+  // Enviar archivo directo al backend
+  const enviarArchivoAlBackend = async (file: File) => {
+    setCargando(true);
+    setError(null);
+    setResultado(null);
+
     try {
-      const text = await file.text();
-      setTexto(text);
-      setError(null); // limpiar error si el archivo es válido
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(`${API_BASE}/analizar`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error(`Error ${res.status}`);
+
+      const data = await res.json();
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setResultado(data);
+        if (data.texto) setTexto(data.texto); // mostrar texto procesado si el backend lo devuelve
+      }
     } catch {
-      setError("No se pudo leer el archivo.");
+      setError("No se pudo analizar el archivo. Intentá más tarde.");
+    } finally {
+      setCargando(false);
     }
   };
 
   const manejarArchivo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) leerArchivo(file);
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      setError(`El archivo supera el límite de ${MAX_FILE_SIZE_MB} MB.`);
+      return;
+    }
+
+    enviarArchivoAlBackend(file);
   };
 
   const manejarDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
-    if (file) leerArchivo(file);
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      setError(`El archivo supera el límite de ${MAX_FILE_SIZE_MB} MB.`);
+      return;
+    }
+
+    enviarArchivoAlBackend(file);
   };
 
-  const analizar = async () => {
+  // Analizar texto pegado manualmente
+  const analizarTextoPegado = async () => {
     setCargando(true);
     setError(null);
     setResultado(null);
@@ -95,8 +126,8 @@ export default function Analizador() {
     <div style={{ maxWidth: 800, margin: "0 auto", padding: 24 }}>
       <h1 style={{ fontWeight: 700, fontSize: 24 }}>Agente Abogado Laboral</h1>
       <p style={{ color: "#555" }}>
-        Pegá el contrato, subí un archivo o arrastralo aquí. Recibirás normativa,
-        jurisprudencia, OCT y una conclusión en formato narrativo.
+        Pegá el contrato, subí un archivo o arrastralo aquí. El agente procesará
+        el documento y devolverá normativa, jurisprudencia, OCT y una conclusión.
       </p>
 
       {/* Textarea */}
@@ -139,8 +170,8 @@ export default function Analizador() {
       </div>
 
       <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
-        <button onClick={analizar} disabled={cargando || !texto}>
-          {cargando ? "Analizando…" : "Analizar"}
+        <button onClick={analizarTextoPegado} disabled={cargando || !texto}>
+          {cargando ? "Analizando…" : "Analizar texto pegado"}
         </button>
       </div>
 
