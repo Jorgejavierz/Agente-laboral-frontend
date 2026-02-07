@@ -1,5 +1,6 @@
 import { useState } from "react";
 import jsPDF from "jspdf";
+import { FaBalanceScale } from "react-icons/fa"; // Ícono profesional
 
 const API_BASE = "https://agente-abogado.onrender.com";
 const MAX_FILE_SIZE_MB = 10;
@@ -11,9 +12,8 @@ export default function Analizador() {
   const [error, setError] = useState<string | null>(null);
   const [feedbackEnviado, setFeedbackEnviado] = useState(false);
 
-  // Enviar archivo directo al backend
   const enviarArchivoAlBackend = async (file: File) => {
-    if (cargando) return; // 👈 evita múltiples llamadas simultáneas
+    if (cargando) return;
     setCargando(true);
     setError(null);
     setResultado(null);
@@ -34,7 +34,7 @@ export default function Analizador() {
         setError(data.error);
       } else {
         setResultado(data);
-        if (data.texto) setTexto(data.texto); // mostrar texto procesado si el backend lo devuelve
+        if (data.texto) setTexto(data.texto);
       }
     } catch {
       setError("No se pudo analizar el archivo. Intentá más tarde.");
@@ -68,9 +68,8 @@ export default function Analizador() {
     enviarArchivoAlBackend(file);
   };
 
-  // Analizar texto pegado manualmente
   const analizarTextoPegado = async () => {
-    if (cargando) return; // 👈 evita múltiples llamadas simultáneas
+    if (cargando) return;
     setCargando(true);
     setError(null);
     setResultado(null);
@@ -125,13 +124,32 @@ export default function Analizador() {
   };
 
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto", padding: 24 }}>
-      <h1 style={{ fontWeight: 700, fontSize: 24 }}>Agente Abogado Laboral</h1>
-      <p style={{ color: "#555" }}>
-        Subí o arrastrá el archivo aquí.
-      </p>
+    <div
+      style={{
+        maxWidth: 800,
+        margin: "0 auto",
+        padding: 24,
+        backgroundColor: "#1c1c1c", // fondo oscuro serio
+        borderRadius: 12,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+        color: "#f5f5f5", // texto claro
+        fontFamily: "Georgia, serif", // tipografía seria
+      }}
+    >
+      <h1
+        style={{
+          fontWeight: 700,
+          fontSize: 24,
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          color: "#f5f5f5",
+        }}
+      >
+        <FaBalanceScale /> Agente Abogado Laboral
+      </h1>
+      <p style={{ color: "#ccc" }}>Subí o arrastrá el archivo aquí.</p>
 
-      {/* Textarea */}
       <textarea
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
@@ -140,30 +158,30 @@ export default function Analizador() {
         style={{
           width: "100%",
           padding: 12,
-          border: "1px solid #ddd",
+          border: "1px solid #444",
           borderRadius: 8,
           marginBottom: 12,
+          backgroundColor: "#2a2a2a",
+          color: "#f5f5f5",
         }}
       />
 
-      {/* Input de archivo */}
       <input
         type="file"
         accept=".txt,.pdf,.docx"
         onChange={manejarArchivo}
-        style={{ marginBottom: 12 }}
+        style={{ marginBottom: 12, color: "#f5f5f5" }}
       />
 
-      {/* Área drag & drop */}
       <div
         onDrop={manejarDrop}
         onDragOver={(e) => e.preventDefault()}
         style={{
-          border: "2px dashed #aaa",
+          border: "2px dashed #666",
           borderRadius: 8,
           padding: 24,
           textAlign: "center",
-          color: "#555",
+          color: "#ccc",
           marginBottom: 12,
         }}
       >
@@ -171,7 +189,21 @@ export default function Analizador() {
       </div>
 
       <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
-        <button onClick={analizarTextoPegado} disabled={cargando || !texto}>
+        <button
+          onClick={analizarTextoPegado}
+          disabled={cargando || !texto}
+          style={{
+            backgroundColor: cargando ? "#888" : "#007BFF",
+            color: "white",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "8px",
+            cursor: cargando ? "not-allowed" : "pointer",
+            fontWeight: 600,
+            boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
+            transition: "background-color 0.3s ease",
+          }}
+        >
           {cargando ? "Analizando…" : "Analizar texto pegado"}
         </button>
       </div>
@@ -183,18 +215,18 @@ export default function Analizador() {
           style={{
             marginTop: 16,
             padding: 16,
-            border: "1px solid #eee",
+            border: "1px solid #444",
             borderRadius: 8,
-            background: "#fafafa",
+            background: "#2a2a2a",
             whiteSpace: "pre-wrap",
             fontFamily: "Georgia, serif",
             lineHeight: 1.6,
+            color: "#f5f5f5",
           }}
         >
           <h2 style={{ fontWeight: 700, fontSize: 18 }}>Informe narrativo</h2>
           {resultado.texto_formateado}
 
-          {/* Bloque OCT explícito */}
           {resultado.json?.oct && (
             <div style={{ marginTop: 16 }}>
               <h3 style={{ fontWeight: 700, fontSize: 16 }}>🔎 Resultados OCT</h3>
@@ -214,7 +246,7 @@ export default function Analizador() {
               <button onClick={() => enviarFeedback(false)}>👎 No útil</button>
             </div>
           ) : (
-            <p style={{ marginTop: 12, color: "green" }}>¡Gracias por tu feedback!</p>
+            <p style={{ marginTop: 12, color: "lightgreen" }}>¡Gracias por tu feedback!</p>
           )}
         </div>
       )}
