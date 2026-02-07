@@ -128,8 +128,7 @@ export default function Analizador() {
     <div style={{ maxWidth: 800, margin: "0 auto", padding: 24 }}>
       <h1 style={{ fontWeight: 700, fontSize: 24 }}>Agente Abogado Laboral</h1>
       <p style={{ color: "#555" }}>
-        Pegá el contrato, subí un archivo o arrastralo aquí. El agente procesará
-        el documento y devolverá normativa, jurisprudencia, OCT y una conclusión.
+        Subí o arrastrá el archivo aquí.
       </p>
 
       {/* Textarea */}
