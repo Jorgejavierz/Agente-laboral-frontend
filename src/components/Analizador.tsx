@@ -13,6 +13,7 @@ export default function Analizador() {
 
   // Enviar archivo directo al backend
   const enviarArchivoAlBackend = async (file: File) => {
+    if (cargando) return; // 👈 evita múltiples llamadas simultáneas
     setCargando(true);
     setError(null);
     setResultado(null);
@@ -69,6 +70,7 @@ export default function Analizador() {
 
   // Analizar texto pegado manualmente
   const analizarTextoPegado = async () => {
+    if (cargando) return; // 👈 evita múltiples llamadas simultáneas
     setCargando(true);
     setError(null);
     setResultado(null);
