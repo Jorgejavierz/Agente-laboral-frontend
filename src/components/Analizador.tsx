@@ -129,11 +129,16 @@ export default function Analizador() {
         maxWidth: 800,
         margin: "0 auto",
         padding: 24,
-        backgroundColor: "#1c1c1c", // fondo oscuro serio
+        backgroundImage: "url('/fondo-legal.jpg')", // 👈 imagen en carpeta public
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
         borderRadius: 12,
         boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
-        color: "#f5f5f5", // texto claro
-        fontFamily: "Georgia, serif", // tipografía seria
+        color: "#f5f5f5",
+        fontFamily: "Georgia, serif",
+        backdropFilter: "brightness(0.6)", // oscurece para dar seriedad
       }}
     >
       <h1
@@ -148,7 +153,7 @@ export default function Analizador() {
       >
         <FaBalanceScale /> Agente Abogado Laboral
       </h1>
-      <p style={{ color: "#ccc" }}>Subí o arrastrá el archivo aquí.</p>
+      <p style={{ color: "#ddd" }}>Subí o arrastrá el archivo aquí.</p>
 
       <textarea
         value={texto}
@@ -161,7 +166,7 @@ export default function Analizador() {
           border: "1px solid #444",
           borderRadius: 8,
           marginBottom: 12,
-          backgroundColor: "#2a2a2a",
+          backgroundColor: "rgba(28,28,28,0.8)",
           color: "#f5f5f5",
         }}
       />
@@ -183,6 +188,7 @@ export default function Analizador() {
           textAlign: "center",
           color: "#ccc",
           marginBottom: 12,
+          backgroundColor: "rgba(28,28,28,0.6)",
         }}
       >
         Arrastrá tu archivo aquí (máx. {MAX_FILE_SIZE_MB} MB)
@@ -217,7 +223,7 @@ export default function Analizador() {
             padding: 16,
             border: "1px solid #444",
             borderRadius: 8,
-            background: "#2a2a2a",
+            background: "rgba(28,28,28,0.8)",
             whiteSpace: "pre-wrap",
             fontFamily: "Georgia, serif",
             lineHeight: 1.6,
