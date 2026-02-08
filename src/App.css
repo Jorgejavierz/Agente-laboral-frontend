@@ -1,42 +1,71 @@
+/* Fondo general de la aplicación */
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-image: url('/fondo.jpg'); /* tu imagen en public */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* Contenedor principal con overlay */
+.overlay {
+  background-color: rgba(255, 255, 255, 0.9); /* capa blanca semitransparente */
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* Ajuste del root */
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
+/* Tarjetas para secciones del informe */
 .card {
+  background: #ffffff;
+  border-radius: 8px;
   padding: 2em;
+  margin-bottom: 1.5em;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  text-align: left;
 }
 
-.read-the-docs {
-  color: #888;
+/* Títulos */
+h1, h2 {
+  color: #333;
+  margin-bottom: 0.5em;
+}
+
+/* Listas */
+ul {
+  padding-left: 1.5em;
+  color: #555;
+}
+
+/* Links de jurisprudencia */
+a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Riesgos con colores semánticos */
+.riesgo-alto {
+  background-color: #fecaca; /* rojo claro */
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+.riesgo-medio {
+  background-color: #fef08a; /* amarillo claro */
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+.riesgo-bajo {
+  background-color: #bbf7d0; /* verde claro */
+  padding: 1rem;
+  border-radius: 0.5rem;
 }

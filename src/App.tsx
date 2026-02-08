@@ -1,5 +1,3 @@
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 
 import Analizador from './components/Analizador';
@@ -7,25 +5,19 @@ import Historial from './components/Historial';
 
 function App() {
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif' }}>
-      {/* Encabezado con logos */}
-      <header style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 24 }}>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-        <h1 style={{ marginLeft: 16 }}>Agente Abogado Laboral</h1>
+    <div className="overlay">
+      {/* Encabezado */}
+      <header style={{ marginBottom: 24, textAlign: 'center' }}>
+        <h1>Agente Abogado Laboral</h1>
       </header>
 
       {/* Sección principal */}
       <main style={{ maxWidth: 900, margin: '0 auto', padding: 24 }}>
-        <section style={{ marginBottom: 32 }}>
+        <section className="card">
           <Analizador />
         </section>
 
-        <section>
+        <section className="card">
           <Historial />
         </section>
       </main>
