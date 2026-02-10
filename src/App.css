@@ -2,7 +2,7 @@
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  background-image: url('/fondo.jpg'); /* tu imagen en public */
+  background-image: url('/close-up-law-scale.jpg'); /* tu imagen en public */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

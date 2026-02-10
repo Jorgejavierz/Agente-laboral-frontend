@@ -129,7 +129,7 @@ export default function Analizador() {
         maxWidth: 800,
         margin: "0 auto",
         padding: 24,
-        backgroundImage: "url('/fondo-legal.jpg')", // 👈 imagen en carpeta public
+        backgroundImage: "url('/close-up-law-scale.jpg')", // 👈 imagen en carpeta public
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
