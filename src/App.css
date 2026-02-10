@@ -10,9 +10,11 @@ body {
 
 /* Contenedor principal con overlay */
 .overlay {
-  background-color: rgba(255, 255, 255, 0.9); /* capa blanca semitransparente */
+  background-color: rgba(255, 255, 255, 0.5); /* blanco semitransparente */
   min-height: 100vh;
   padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 /* Ajuste del root */
