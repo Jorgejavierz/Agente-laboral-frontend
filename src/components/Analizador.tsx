@@ -115,11 +115,11 @@ export default function Analizador() {
   };
 
   const descargarPDF = () => {
-    if (!resultado?.texto_formateado) return;
+    if (!resultado?.informe) return;
     const doc = new jsPDF();
     doc.setFont("times", "normal");
     doc.setFontSize(12);
-    doc.text(resultado.texto_formateado, 10, 10, { maxWidth: 190 });
+    doc.text(resultado.informe, 10, 10, { maxWidth: 190 });
     doc.save("informe_agente_abogado.pdf");
   };
 
@@ -216,7 +216,7 @@ export default function Analizador() {
 
       {error && <p style={{ marginTop: 12, color: "crimson" }}>{error}</p>}
 
-      {resultado?.texto_formateado && (
+      {resultado?.informe && (
         <div
           style={{
             marginTop: 16,
