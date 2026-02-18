@@ -231,7 +231,7 @@ export default function Analizador() {
           }}
         >
           <h2 style={{ fontWeight: 700, fontSize: 18 }}>Informe narrativo</h2>
-          {resultado.texto_formateado}
+          {resultado.informe}
 
           {resultado.json?.oct && (
             <div style={{ marginTop: 16 }}>
