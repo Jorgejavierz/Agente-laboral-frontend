@@ -40,6 +40,14 @@ export default function CalculadoraIntereses() {
     }
   };
 
+  // 🔹 Función para formatear el monto como moneda
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+      minimumFractionDigits: 2,
+    }).format(value);
+
   return (
     <div
       style={{
@@ -149,7 +157,7 @@ export default function CalculadoraIntereses() {
             (fecha {resultado.tasa_usada.fecha})
           </p>
           <p style={{ fontSize: 18, fontWeight: 700, color: "#4CAF50" }}>
-            💰 Monto final: {resultado.monto_final}
+            💰 Monto final: {formatCurrency(resultado.monto_final)}
           </p>
         </div>
       )}
