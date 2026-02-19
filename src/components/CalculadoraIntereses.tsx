@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const API_BASE = "http://127.0.0.1:8000"; // ajustá si desplegás en Render/Vercel
+const API_BASE = "https://agente-abogado.onrender.com"; // ajustá si desplegás en Render/Vercel
 
 export default function CalculadoraIntereses() {
   const [capital, setCapital] = useState("");
