@@ -123,7 +123,7 @@ export default function Analizador() {
     doc.save("informe_agente_abogado.pdf");
   };
 
-  return (
+    return (
     <div
       style={{
         maxWidth: 800,
@@ -155,21 +155,50 @@ export default function Analizador() {
       </h1>
       <p style={{ color: "#ddd" }}>Subí o arrastrá el archivo aquí.</p>
 
-      <textarea
-        value={texto}
-        onChange={(e) => setTexto(e.target.value)}
-        placeholder="Pegá aquí el contrato o conflicto..."
-        rows={10}
-        style={{
-          width: "100%",
-          padding: 12,
-          border: "1px solid #444",
-          borderRadius: 8,
-          marginBottom: 12,
-          backgroundColor: "rgba(28,28,28,0.8)",
-          color: "#f5f5f5",
+      {/* FORM para que Enter ejecute analizarTextoPegado */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          analizarTextoPegado();
         }}
-      />
+        style={{ width: "100%" }}
+      >
+        <textarea
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+          placeholder="Pegá aquí el contrato o conflicto..."
+          rows={10}
+          style={{
+            width: "100%",
+            padding: 12,
+            border: "1px solid #444",
+            borderRadius: 8,
+            marginBottom: 12,
+            backgroundColor: "rgba(28,28,28,0.8)",
+            color: "#f5f5f5",
+          }}
+        />
+
+        <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+          <button
+            type="submit"
+            disabled={cargando || !texto}
+            style={{
+              backgroundColor: cargando ? "#888" : "#007BFF",
+              color: "white",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "8px",
+              cursor: cargando ? "not-allowed" : "pointer",
+              fontWeight: 600,
+              boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
+              transition: "background-color 0.3s ease",
+            }}
+          >
+            {cargando ? "Analizando…" : "Analizar texto pegado"}
+          </button>
+        </div>
+      </form>
 
       <input
         type="file"
@@ -192,26 +221,6 @@ export default function Analizador() {
         }}
       >
         Arrastrá tu archivo aquí (máx. {MAX_FILE_SIZE_MB} MB)
-      </div>
-
-      <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
-        <button
-          onClick={analizarTextoPegado}
-          disabled={cargando || !texto}
-          style={{
-            backgroundColor: cargando ? "#888" : "#007BFF",
-            color: "white",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "8px",
-            cursor: cargando ? "not-allowed" : "pointer",
-            fontWeight: 600,
-            boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
-            transition: "background-color 0.3s ease",
-          }}
-        >
-          {cargando ? "Analizando…" : "Analizar texto pegado"}
-        </button>
       </div>
 
       {error && <p style={{ marginTop: 12, color: "crimson" }}>{error}</p>}

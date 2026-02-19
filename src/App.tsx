@@ -2,6 +2,7 @@ import './App.css';
 
 import Analizador from './components/Analizador';
 import Historial from './components/Historial';
+import CalculadoraIntereses from './components/CalculadoraIntereses';
 
 function App() {
   return (
@@ -19,6 +20,10 @@ function App() {
 
         <section className="card">
           <Historial />
+        </section>
+
+        <section className="card">
+          <CalculadoraIntereses />
         </section>
       </main>
 
