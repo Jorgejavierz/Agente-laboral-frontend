@@ -12,6 +12,7 @@ export default function Analizador() {
   const [error, setError] = useState<string | null>(null);
   const [feedbackEnviado, setFeedbackEnviado] = useState(false);
 
+  // 🔹 Subir archivo al backend
   const enviarArchivoAlBackend = async (file: File) => {
     if (cargando) return;
     setCargando(true);
@@ -22,7 +23,7 @@ export default function Analizador() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch(`${API_BASE}/analizar`, {
+      const res = await fetch(`${API_BASE}/upload_document`, {
         method: "POST",
         body: formData,
       });
@@ -30,12 +31,7 @@ export default function Analizador() {
       if (!res.ok) throw new Error(`Error ${res.status}`);
 
       const data = await res.json();
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setResultado(data);
-        if (data.texto) setTexto(data.texto);
-      }
+      setResultado(data);
     } catch {
       setError("No se pudo analizar el archivo. Intentá más tarde.");
     } finally {
@@ -68,6 +64,7 @@ export default function Analizador() {
     enviarArchivoAlBackend(file);
   };
 
+  // 🔹 Consultar texto pegado
   const analizarTextoPegado = async () => {
     if (cargando) return;
     setCargando(true);
@@ -76,20 +73,15 @@ export default function Analizador() {
     setFeedbackEnviado(false);
 
     try {
-      const res = await fetch(`${API_BASE}/analizar`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ texto }),
-      });
+      const res = await fetch(
+        `${API_BASE}/consultar_documento?pregunta=${encodeURIComponent(texto)}`,
+        { method: "GET" }
+      );
 
       if (!res.ok) throw new Error(`Error ${res.status}`);
 
       const data = await res.json();
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setResultado(data);
-      }
+      setResultado(data);
     } catch {
       setError("No se pudo analizar. Revisá el texto o intentá más tarde.");
     } finally {
@@ -97,6 +89,7 @@ export default function Analizador() {
     }
   };
 
+  // 🔹 Feedback
   const enviarFeedback = async (util: boolean) => {
     try {
       await fetch(`${API_BASE}/feedback`, {
@@ -114,6 +107,7 @@ export default function Analizador() {
     }
   };
 
+  // 🔹 Descargar informe en PDF
   const descargarPDF = () => {
     if (!resultado?.informe) return;
     const doc = new jsPDF();
@@ -123,13 +117,13 @@ export default function Analizador() {
     doc.save("informe_agente_abogado.pdf");
   };
 
-    return (
+  return (
     <div
       style={{
         maxWidth: 800,
         margin: "0 auto",
         padding: 24,
-        backgroundImage: "url('/close-up-law-scale.jpg')", // 👈 imagen en carpeta public
+        backgroundImage: "url('/close-up-law-scale.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -138,7 +132,7 @@ export default function Analizador() {
         boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
         color: "#f5f5f5",
         fontFamily: "Georgia, serif",
-        backdropFilter: "brightness(0.6)", // oscurece para dar seriedad
+        backdropFilter: "brightness(0.6)",
       }}
     >
       <h1
@@ -242,15 +236,6 @@ export default function Analizador() {
           <h2 style={{ fontWeight: 700, fontSize: 18 }}>Informe narrativo</h2>
           {resultado.informe}
 
-          {resultado.json?.oct && (
-            <div style={{ marginTop: 16 }}>
-              <h3 style={{ fontWeight: 700, fontSize: 16 }}>🔎 Resultados OCT</h3>
-              <p><strong>Clasificación OCT:</strong> {resultado.json.oct.clasificacion_oct}</p>
-              <p><strong>Riesgos OCT:</strong> {resultado.json.oct.riesgos_oct}</p>
-              <p><strong>Recomendaciones OCT:</strong> {resultado.json.oct.recomendaciones_oct}</p>
-            </div>
-          )}
-
           <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
             <button onClick={descargarPDF}>📄 Descargar PDF</button>
           </div>
@@ -261,7 +246,9 @@ export default function Analizador() {
               <button onClick={() => enviarFeedback(false)}>👎 No útil</button>
             </div>
           ) : (
-            <p style={{ marginTop: 12, color: "lightgreen" }}>¡Gracias por tu feedback!</p>
+            <p style={{ marginTop: 12, color: "lightgreen" }}>
+              ¡Gracias por tu feedback!
+            </p>
           )}
         </div>
       )}
